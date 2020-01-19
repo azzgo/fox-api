@@ -15,7 +15,12 @@ pipeline {
       steps {
         container('golang') {
           sh 'go get -d -v'
-          sh 'GOOS=linux  GOARCH=amd64 go build -o bin/app'
+          // fix from: https://www.cloudreach.com/en/resources/blog/containerize-this-how-to-build-golang-dockerfiles/
+          sh '''
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
+          go build -a -installsuffix cgo \
+          -ldflags '-extldflags "-static"' -o bin/app
+          '''
         }
       }
     }

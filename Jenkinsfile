@@ -13,7 +13,7 @@ pipeline {
   stages {
     stage('编译api...') {
       steps {
-        container('nodejs') {
+        container('golang') {
           sh 'go get -d -v'
           sh 'GOOS=linux  GOARCH=amd64 go build -o bin/app'
         }
@@ -23,11 +23,11 @@ pipeline {
     stage('构建镜像并上传仓库') {
       steps {
         container('docker') {
-          sh 'docker build -f Dockerfile -t ${DOCKER_REGISTRY_HOST}/fox-api-assets:${GIT_COMMIT} .'
-          sh 'docker tag ${DOCKER_REGISTRY_HOST}/fox-api-assets:${GIT_COMMIT} ${DOCKER_REGISTRY_HOST}/fox-api-assets:latest'
+          sh 'docker build -f Dockerfile -t ${DOCKER_REGISTRY_HOST}/fox-api:${GIT_COMMIT} .'
+          sh 'docker tag ${DOCKER_REGISTRY_HOST}/fox-api:${GIT_COMMIT} ${DOCKER_REGISTRY_HOST}/fox-api:latest'
           sh 'docker login ${DOCKER_REGISTRY_HOST} -u ${DOCKER_REGISTRY_LOGIN_USR} -p ${DOCKER_REGISTRY_LOGIN_PSW}'
-          sh 'docker push ${DOCKER_REGISTRY_HOST}/fox-api-assets:${GIT_COMMIT}'
-          sh 'docker push ${DOCKER_REGISTRY_HOST}/fox-api-assets:latest'
+          sh 'docker push ${DOCKER_REGISTRY_HOST}/fox-api:${GIT_COMMIT}'
+          sh 'docker push ${DOCKER_REGISTRY_HOST}/fox-api:latest'
         }
       }
     }

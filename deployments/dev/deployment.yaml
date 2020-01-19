@@ -17,7 +17,7 @@ spec:
       imagePullSecrets:
       - name: docker-registry-login
       containers:
-      - name: assets
-        image: docker-registry.192-168-33-10.nip.io/fox-api-assets:latest
+      - name: fox-api-dev
+        image: docker-registry.192-168-33-10.nip.io/fox-api:latest
         ports:
         - containerPort: 80

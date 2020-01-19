@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins-slave: golang
+spec:
+  containers:
+  - name: golang
+    image: golang:1.12-alpine
+    tty: true
+    command:
+    - cat
+  - name: docker
+    image: docker:19.03.5-dind
+    tty: true
+    args:
+      - "--registry-mirror=https://t9ab0rkd.mirror.aliyuncs.com"
+    volumeMounts:
+    - name: docker-registry-ca
+      mountPath: "/etc/docker/certs.d/docker-registry.192-168-33-10.nip.io"
+    securityContext:
+      privileged: true
+  - name: kubectl
+    image: bitnami/kubectl:1.17-ol-7
+    tty: true
+    command:
+      - cat
+    securityContext:
+      runAsUser: 1000
+      fsGroup: 1000
+  serviceAccountName: ci-robot
+  volumes:
+  - name: docker-registry-ca
+    secret:
+      secretName: docker-registry-ca

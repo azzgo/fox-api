@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fox-api-dev
+  labels:
+    app: fox-api-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fox-api-dev
+  template:
+    metadata:
+      labels:
+        app: fox-api-dev
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-login
+      containers:
+      - name: assets
+        image: docker-registry.192-168-33-10.nip.io/fox-api-assets:latest
+        ports:
+        - containerPort: 80
